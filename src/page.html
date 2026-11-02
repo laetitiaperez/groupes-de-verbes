@@ -1,0 +1,189 @@
+<title>Carte des groupes de verbes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Playwrite+FR+Moderne:wght@300;400&display=swap">
+<style>
+/* Concept : une page de cahier Seyès, avec les couleurs de la correction de grammaire. */
+:root {
+  --bg: #f4f6fc; --papier: #fbfcff; --encre: #1b2142; --doux: #535c7e; --trait: #cdd6ee; --seyes: #dfe5f5; --marge: #e0617a;
+  --c1: #2b5bc9; --c2: #0d7f62; --c3: #c92a4b; --c4: #7036d6; --c5: #0d6e88; --c6: #9c1fa6; --c7: #8f5a06;
+  --rad: #2b5bc9; --tm: #c92a4b; --pers: #0d7f62;
+  --surv: #fff3c4; --ecrit: "Playwrite FR Moderne", "Snell Roundhand", cursive; --texte: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12162b; --papier: #1a1f3a; --encre: #e9ecfa; --doux: #a8b0d0; --trait: #333c63; --seyes: #1e2442; --marge: #e0617a;
+  --c1: #86a9ff; --c2: #57d3ac; --c3: #ff8ba3; --c4: #bb9cff; --c5: #63cfe8; --c6: #ec93f2; --c7: #e8b75c;
+  --rad: #86a9ff; --tm: #ff8ba3; --pers: #57d3ac; --surv: #4b4120; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #12162b; --papier: #1a1f3a; --encre: #e9ecfa; --doux: #a8b0d0; --trait: #333c63; --seyes: #1e2442; --marge: #e0617a;
+  --c1: #86a9ff; --c2: #57d3ac; --c3: #ff8ba3; --c4: #bb9cff; --c5: #63cfe8; --c6: #ec93f2; --c7: #e8b75c;
+  --rad: #86a9ff; --tm: #ff8ba3; --pers: #57d3ac; --surv: #4b4120; color-scheme: dark }
+* { box-sizing: border-box }
+html, body { height: 100% }
+body { background: var(--bg); color: var(--encre); font: 15px/1.5 var(--texte); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 100% }
+button, input { font: inherit; color: inherit }
+button { cursor: pointer; background: none; border: 0 }
+:focus-visible { outline: 2px solid var(--c1); outline-offset: 2px }
+header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 6px 24px }
+h1 { font: 400 clamp(22px, 3vw, 30px)/1.5 var(--ecrit); margin: 0 }
+.legende { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; color: var(--doux); font-size: 13px }
+.deco { font-size: 20px; font-weight: 700; letter-spacing: .01em; color: var(--encre) }
+.deco .r { color: var(--rad) } .deco .t { color: var(--tm) } .deco .p { color: var(--pers) }
+.deco .sep { color: var(--doux); font-weight: 400; padding-inline: 1px }
+.barre { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center }
+.vues { display: flex; border: 1px solid var(--trait); border-radius: 8px; overflow: hidden; background: var(--papier) }
+.vues button { padding: 6px 12px; border-right: 1px solid var(--trait) }
+.vues button:last-child { border-right: 0 }
+.vues button[aria-selected="true"] { background: var(--encre); color: var(--papier) }
+.recherche { position: relative; flex: 1 1 200px; min-width: 0; max-width: 340px }
+.recherche input { width: 100%; padding: 6px 10px; border: 1px solid var(--trait); border-radius: 8px; background: var(--papier) }
+#resultats { position: absolute; z-index: 20; top: calc(100% + 4px); left: 0; right: 0; background: var(--papier); border: 1px solid var(--trait); border-radius: 8px; box-shadow: 0 8px 24px rgb(0 0 0 / .18); overflow: hidden }
+#resultats button { display: block; width: 100%; text-align: left; padding: 6px 10px }
+#resultats button:hover, #resultats button:focus { background: var(--bg) }
+#resultats small { color: var(--doux); display: block }
+.outil { padding: 6px 10px; border: 1px solid var(--trait); border-radius: 8px; background: var(--papier) }
+.filtres { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: center; font-size: 13.5px }
+.fg { display: flex; flex-wrap: wrap; gap: 4px; align-items: center }
+.fg > span { color: var(--doux); margin-right: 2px }
+.puce { padding: 2px 9px; border: 1px solid var(--trait); border-radius: 999px; background: var(--papier) }
+.puce[aria-pressed="true"] { background: var(--encre); color: var(--papier); border-color: var(--encre) }
+#bilan { color: var(--doux) }
+main { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 430px; gap: 12px; min-height: 0 }
+.scene { min-width: 0; min-height: 420px; height: calc(100vh - 150px); border: 1px solid var(--trait); border-radius: 8px; overflow: auto; background-color: var(--papier);
+  background-image: linear-gradient(var(--seyes) 1px, transparent 1px), linear-gradient(90deg, var(--seyes) 1px, transparent 1px); background-size: 100% 8px, 32px 100%; background-attachment: local }
+#canevas { position: relative }
+#canevas svg { position: absolute; inset: 0; pointer-events: none }
+#canevas path { fill: none; stroke-width: 2; opacity: .55 }
+.noeud { position: absolute; left: 0; top: 0; white-space: nowrap; padding: 3px 9px; border-radius: 7px; border: 1.5px solid var(--c); background: var(--papier); color: var(--encre); font-size: 14px; line-height: 20px; transition: transform .22s ease, opacity .15s }
+.noeud.n1 { background: var(--c); color: var(--papier); font-weight: 700 }
+.noeud.racine { font: 400 19px/1.6 var(--ecrit); background: var(--encre); color: var(--papier); border-color: var(--encre); padding: 8px 18px; border-radius: 28px }
+.noeud .compte { color: var(--doux); font-size: 12px; margin-left: 6px }
+.noeud.n1 .compte { color: inherit; opacity: .8 }
+.noeud.choisi { box-shadow: 0 0 0 3px var(--surv), 0 0 0 4.5px var(--c) }
+.noeud.eteint { opacity: .28 }
+.noeud.sans { border-style: dashed }
+#plan { list-style: none; margin: 0; padding: 8px }
+#plan ul { list-style: none; margin: 0; padding-left: 16px; border-left: 2px solid var(--c) }
+#plan .noeud { position: static; display: block; margin: 4px 0; white-space: normal; text-align: left; max-width: 100% }
+#tableau-wrap { height: 100%; overflow: auto; background: var(--papier) }
+table { border-collapse: collapse; width: 100% }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--trait); vertical-align: top }
+#comparaison th { position: sticky; top: 0; background: var(--papier); z-index: 1; white-space: nowrap }
+#comparaison th button { font-weight: 700; padding: 0 }
+#comparaison tbody tr { cursor: pointer }
+#comparaison tbody tr:hover { background: var(--bg) }
+#comparaison tr.choisi { background: var(--surv) }
+#vue-sources { padding: 12px 16px; background: var(--papier); overflow: auto; height: 100% }
+#vue-sources h2 { font-size: 17px; margin: 14px 0 4px }
+#vue-sources li { margin-block: 3px }
+#vue-sources p { max-width: 70ch }
+.fiche { min-width: 0; height: calc(100vh - 150px); min-height: 420px; overflow: auto; background: var(--papier); border: 1px solid var(--trait); border-radius: 8px; padding: 14px 16px 18px 28px; position: relative;
+  background-image: linear-gradient(90deg, transparent 15px, var(--marge) 15px, var(--marge) 16.5px, transparent 16.5px); background-attachment: local }
+.fiche h2 { font-size: 21px; line-height: 1.25; margin: 2px 0 8px; text-wrap: balance }
+.fiche h3 { font-size: 12.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--doux); margin: 14px 0 4px }
+.fiche p { margin: 0 0 6px }
+.fiche ul, .fiche ol { margin: 0; padding-left: 18px }
+.fiche li { margin-block: 2px }
+.fil { font-size: 12.5px; color: var(--doux) }
+.fil button { padding: 0; text-decoration: underline; text-underline-offset: 2px; color: inherit }
+#fermer { position: absolute; right: 8px; top: 8px; display: none; padding: 2px 8px; border: 1px solid var(--trait); border-radius: 6px }
+.valeurs dt { font-weight: 700 } .valeurs dd { margin: 0 0 5px }
+.valeurs { margin: 0 }
+.attention { border: 1.5px dashed var(--marge); border-radius: 6px; padding: 6px 10px; margin-top: 10px }
+.sanssource { font-size: 13px; font-weight: 700; color: var(--marge); margin-bottom: 6px }
+.lien { padding: 0; color: var(--c1); text-decoration: underline; text-underline-offset: 2px }
+.liens { display: flex; flex-wrap: wrap; gap: 4px }
+.onglets { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 6px }
+.formes td { padding: 2px 10px 2px 0; border: 0; font-variant-numeric: tabular-nums }
+.fiche .sources { font-size: 13px; padding-left: 16px }
+.fiche a, #vue-sources a { color: var(--c1) }
+
+.deco .d, .des { color: var(--tm) } .rad { color: var(--rad) }
+.legende a { color: var(--c1) }
+.verbe-noeud { font-style: italic }
+.temps { display: grid; grid-template-columns: repeat(auto-fill, minmax(178px, 1fr)); gap: 10px 16px; margin-top: 4px }
+.bloc h4 { font-size: 13.5px; margin: 0 0 2px; color: var(--encre) }
+.bloc div { font-size: 14px; line-height: 1.45; overflow-wrap: anywhere }
+.bloc .suj { color: var(--doux) }
+.mode { font-size: 12.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--doux); margin: 14px 0 4px; border-bottom: 1px solid var(--trait) }
+.cache { color: transparent; background: var(--surv); border-radius: 3px; cursor: pointer; min-width: 1.4em; display: inline-block; line-height: 1.1 }
+.radicaux li b { color: var(--rad) }
+.bascule[aria-pressed="true"] { background: var(--encre); color: var(--papier) }
+.choix { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 10px; position: sticky; top: 0; left: 0; background: var(--papier); z-index: 2; border-bottom: 1px solid var(--trait) }
+#comparaison th { top: 50px } #vue-comparer, #vue-desinences { height: 100%; overflow: auto; background: var(--papier) }
+#comparaison td, #tdes td { white-space: nowrap } #comparaison td:first-child { white-space: normal; min-width: 170px }
+#comparaison tbody tr:hover { background: var(--bg) } #comparaison tbody tr { cursor: pointer }
+#comparaison tr.titre td { font-weight: 700; background: var(--bg); color: var(--doux) }
+#tdes th { position: sticky; top: 0; background: var(--papier); z-index: 1; white-space: nowrap }
+#tdes th:first-child { min-width: 130px } #tdes td:not(:first-child) { min-width: 118px; white-space: normal }
+#tdes .puce { margin: 1px; font-size: 13px } #tdes .puce small { color: inherit; opacity: .7 }
+details summary { cursor: pointer; font-weight: 700 } details { margin-top: 10px }
+.proches li { margin-block: 3px }
+@media (max-width: 900px) { #vue-comparer, #vue-desinences { height: auto } .temps { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) } }
+#imprimable { display: none }
+@media (max-width: 900px) {
+  html, body { height: auto }
+  main { display: block }
+  .scene { height: auto; min-height: 0; max-height: none; overflow: visible }
+  #tableau-wrap { overflow-x: auto; height: auto } #vue-sources { height: auto }
+  .fiche { position: fixed; z-index: 30; left: 0; right: 0; bottom: 0; height: auto; max-height: 72%; min-height: 0; border-radius: 12px 12px 0 0; box-shadow: 0 -8px 28px rgb(0 0 0 / .25); padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+  #fermer { display: block }
+}
+@media (prefers-reduced-motion: reduce) { .noeud { transition: none } }
+@page { size: A4; margin: 12mm }
+@media print {
+  body { display: block; padding: 0; background: #fff; color: #000; font-size: 9.5pt; line-height: 1.32 }
+  header .legende, .barre, .filtres, main { display: none !important }
+  #imprimable { display: block }
+  #imprimable h2 { font-size: 13pt; margin: 10pt 0 4pt; break-after: avoid }
+  #imprimable .cols { column-count: 2; column-gap: 16pt }
+  #imprimable article { break-inside: avoid; margin-bottom: 6pt }
+  #imprimable h3 { font-size: 10pt; margin: 0 }
+  #imprimable p { margin: 0 }
+  #imprimable small { color: #444 }
+}
+</style>
+
+<header>
+  <h1>Les groupes de verbes</h1>
+  <div class="legende">
+    <span class="deco"><span class="r">chant</span><span class="sep">·</span><span class="d">ions</span></span>
+    <span>radical et désinence</span>
+    <a href="https://laetitiaperez.github.io/conjugaison/" target="_blank" rel="noopener">Carte de la conjugaison</a>
+  </div>
+</header>
+
+<div class="barre">
+  <div class="vues" role="tablist" aria-label="Vue">
+    <button role="tab" id="v-carte" aria-selected="true">Carte</button>
+    <button role="tab" id="v-comparer" aria-selected="false">Comparer</button>
+    <button role="tab" id="v-desinences" aria-selected="false">Désinences</button>
+    <button role="tab" id="v-sources" aria-selected="false">Sources</button>
+  </div>
+  <div class="recherche">
+    <input id="q" type="search" placeholder="Chercher un verbe, une forme…" aria-label="Chercher un verbe ou une forme" autocomplete="off">
+    <div id="resultats" hidden></div>
+  </div>
+  <button class="outil" id="deplier">Tout déplier</button>
+  <button class="outil" id="replier">Replier</button>
+  <button class="outil bascule" id="masquer" aria-pressed="false">Cacher les désinences</button>
+</div>
+
+<main>
+  <section class="scene" id="scene" aria-label="Carte mentale">
+    <div id="vue-carte">
+      <div id="canevas"><svg aria-hidden="true"></svg></div>
+      <ul id="plan" hidden></ul>
+    </div>
+    <div id="vue-comparer" hidden><div class="choix" id="choix-temps"></div><table id="comparaison"></table></div>
+    <div id="vue-desinences" hidden><table id="tdes"></table></div>
+    <div id="vue-sources" hidden></div>
+  </section>
+  <aside class="fiche" id="fiche" aria-live="polite"></aside>
+</main>
+<div id="imprimable"></div>
+
+<script>
+/*DONNEES*/
+/*APP*/
+</script>
