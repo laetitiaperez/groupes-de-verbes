@@ -421,7 +421,7 @@ $("q").onkeydown = e => {
   if (e.key === "Enter") { const b = $("resultats").querySelector("[data-id]"); if (b) aller(b.dataset.id); }
   if (e.key === "Escape") { $("q").value = ""; $("resultats").hidden = true; }
 };
-etroit.addEventListener("change", dessiner);
+etroit.addEventListener("change", () => { $("fiche").hidden = etroit.matches; dessiner(); });
 addEventListener("resize", () => { if (etat.vue === "carte" && !etroit.matches) dessiner(); });
 document.fonts?.ready.then(() => { const p = dessiner(); centrer("groupes", p); });
 
