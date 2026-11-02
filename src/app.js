@@ -190,7 +190,7 @@ function formesProches(verbe) {
 function ficheVerbe(f) {
   const v = f.verbe, e = FORMES[v], fam = FAMILLE[v];
   const entier = v === "être" || v === "avoir" || v === "aller";
-  let h = `<p><b>${NOM_GROUPE[fam.groupe]}</b>, famille <button class="lien" data-va="${fam.id}">${fam.t}</button>. Auxiliaire : ${e.aux}.</p>`;
+  let h = `<p><b>${NOM_GROUPE[fam.groupe]}</b>, famille <button class="lien" data-va="${fam.id}">${fam.titre}</button>. Auxiliaire : ${e.aux}.</p>`;
   if (NOTES[v]) h += `<p>${NOTES[v]}</p>`;
   if (DECISIONS[v]) h += `<div class="attention">${DECISIONS[v]}</div>`;
   if (!entier) {
@@ -374,7 +374,7 @@ function chercher() {
   const q = sansAcc(brut);
   const res = [];
   (FORMES_INDEX.get(q) || new Map()).forEach((s, v) => res.push([VERBE + v, v, "Forme : " + [...s].slice(0, 3).join(", ")]));
-  NOEUDS.filter(f => sansAcc(f.t).includes(q) && !res.some(x => x[0] === f.id)).sort((a, b) => sansAcc(a.t).indexOf(q) - sansAcc(b.t).indexOf(q)).forEach(f => res.push([f.id, f.t, f.verbe ? "Verbe, " + FAMILLE[f.verbe].t : "Fiche"]));
+  NOEUDS.filter(f => sansAcc(f.t).includes(q) && !res.some(x => x[0] === f.id)).sort((a, b) => sansAcc(a.t).indexOf(q) - sansAcc(b.t).indexOf(q)).forEach(f => res.push([f.id, f.t, f.verbe ? "Verbe, " + FAMILLE[f.verbe].titre : "Fiche"]));
   const l = res.slice(0, 8);
   r.innerHTML = l.length ? l.map(([id, t, s]) => `<button data-id="${id}">${t}<small>${s}</small></button>`).join("") : `<button disabled>Aucun résultat</button>`;
   r.hidden = false;

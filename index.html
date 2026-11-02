@@ -54,7 +54,7 @@ main { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 430px; gap:
 #canevas { position: relative }
 #canevas svg { position: absolute; inset: 0; pointer-events: none }
 #canevas path { fill: none; stroke-width: 2; opacity: .55 }
-.noeud { position: absolute; left: 0; top: 0; white-space: nowrap; padding: 3px 9px; border-radius: 7px; border: 1.5px solid var(--c); background: var(--papier); color: var(--encre); font-size: 14px; line-height: 20px; transition: transform .22s ease, opacity .15s }
+.noeud { position: absolute; left: 0; top: 0; white-space: nowrap; padding: 3px 9px; border-radius: 7px; border: 1.5px solid var(--c); background: var(--papier); color: var(--encre); font-size: 14px; line-height: 20px }
 .noeud.n1 { background: var(--c); color: var(--papier); font-weight: 700 }
 .noeud.racine { font: 400 19px/1.6 var(--ecrit); background: var(--encre); color: var(--papier); border-color: var(--encre); padding: 8px 18px; border-radius: 28px }
 .noeud .compte { color: var(--doux); font-size: 12px; margin-left: 6px }
@@ -115,7 +115,7 @@ th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--tra
 #comparaison tbody tr:hover { background: var(--bg) } #comparaison tbody tr { cursor: pointer }
 #comparaison tr.titre td { font-weight: 700; background: var(--bg); color: var(--doux) }
 #tdes th { position: sticky; top: 0; background: var(--papier); z-index: 1; white-space: nowrap }
-#tdes th:first-child { min-width: 130px } #tdes td:not(:first-child) { min-width: 118px; white-space: normal }
+#tdes th:first-child { min-width: 130px } #tdes td:not(:first-child) { min-width: 88px; white-space: normal }
 #tdes .puce { margin: 1px; font-size: 13px } #tdes .puce small { color: inherit; opacity: .7 }
 details summary { cursor: pointer; font-weight: 700 } details { margin-top: 10px }
 .proches li { margin-block: 3px }
@@ -128,8 +128,8 @@ details summary { cursor: pointer; font-weight: 700 } details { margin-top: 10px
   #tableau-wrap { overflow-x: auto; height: auto } #vue-sources { height: auto }
   .fiche { position: fixed; z-index: 30; left: 0; right: 0; bottom: 0; height: auto; max-height: 72%; min-height: 0; border-radius: 12px 12px 0 0; box-shadow: 0 -8px 28px rgb(0 0 0 / .25); padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
   #fermer { display: block }
+  .fil { padding-right: 64px }
 }
-@media (prefers-reduced-motion: reduce) { .noeud { transition: none } }
 @page { size: A4; margin: 12mm }
 @media print {
   body { display: block; padding: 0; background: #fff; color: #000; font-size: 9.5pt; line-height: 1.32 }
@@ -681,7 +681,7 @@ function formesProches(verbe) {
 function ficheVerbe(f) {
   const v = f.verbe, e = FORMES[v], fam = FAMILLE[v];
   const entier = v === "être" || v === "avoir" || v === "aller";
-  let h = `<p><b>${NOM_GROUPE[fam.groupe]}</b>, famille <button class="lien" data-va="${fam.id}">${fam.t}</button>. Auxiliaire : ${e.aux}.</p>`;
+  let h = `<p><b>${NOM_GROUPE[fam.groupe]}</b>, famille <button class="lien" data-va="${fam.id}">${fam.titre}</button>. Auxiliaire : ${e.aux}.</p>`;
   if (NOTES[v]) h += `<p>${NOTES[v]}</p>`;
   if (DECISIONS[v]) h += `<div class="attention">${DECISIONS[v]}</div>`;
   if (!entier) {
@@ -865,7 +865,7 @@ function chercher() {
   const q = sansAcc(brut);
   const res = [];
   (FORMES_INDEX.get(q) || new Map()).forEach((s, v) => res.push([VERBE + v, v, "Forme : " + [...s].slice(0, 3).join(", ")]));
-  NOEUDS.filter(f => sansAcc(f.t).includes(q) && !res.some(x => x[0] === f.id)).sort((a, b) => sansAcc(a.t).indexOf(q) - sansAcc(b.t).indexOf(q)).forEach(f => res.push([f.id, f.t, f.verbe ? "Verbe, " + FAMILLE[f.verbe].t : "Fiche"]));
+  NOEUDS.filter(f => sansAcc(f.t).includes(q) && !res.some(x => x[0] === f.id)).sort((a, b) => sansAcc(a.t).indexOf(q) - sansAcc(b.t).indexOf(q)).forEach(f => res.push([f.id, f.t, f.verbe ? "Verbe, " + FAMILLE[f.verbe].titre : "Fiche"]));
   const l = res.slice(0, 8);
   r.innerHTML = l.length ? l.map(([id, t, s]) => `<button data-id="${id}">${t}<small>${s}</small></button>`).join("") : `<button disabled>Aucun résultat</button>`;
   r.hidden = false;
